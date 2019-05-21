@@ -8,10 +8,10 @@ fastify.get('/', (request, reply) => {
   reply.send({ hello: 'world' })
 })
 
-fastify.listen(3000, (err) => {
+fastify.listen(3000, async (err) => {
   if (err) {
     throw err;
   }
   fastify.log.info(`server is up`);
-  initializeServer();
+  await initializeServer();
 })

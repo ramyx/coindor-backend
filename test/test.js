@@ -7,7 +7,6 @@ const { assert } = chai;
 chai.use(chaiHttp);
 
 describe('Initialize Database', function() {
-
   const url = `mongodb://${settings.host}:${settings.dbPort}`;
   const dbName = settings.dbName;
   let connection;
