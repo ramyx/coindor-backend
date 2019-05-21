@@ -29,16 +29,3 @@ describe('Initialize Database', function() {
     return assert.isDefined(db);
   });
 });
-
-describe('Initialize App', function() {
-  const url = `http://${settings.host}:${settings.appPort}`;
-
-  it('App should be initialized', function(done) {
-    chai.request(url)
-      .get('/')
-      .end((err, res) => {
-        assert.isDefined(res.body);
-        done();
-      });
-  });
-});

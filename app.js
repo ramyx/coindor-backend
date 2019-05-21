@@ -9,7 +9,7 @@ const fastify = require('fastify')({
   * @api {patch} /user/:userId Modifies a user
   * @apiPermission authenticated user
   * @apiParam {String} userId 
-  * @apiBodyParam {[String]} coins
+  * @apiBodyParam {[String]} coins -> prefix of coins; old coins will be deleted and replaced by these
 */
 fastify.patch('/user/:userId', (request, reply) => {
   const { userId } = request.params;

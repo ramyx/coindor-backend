@@ -7,6 +7,7 @@ const addUserSchema = (db, callback) => db.createCollection("user", {
             bsonType: "array",
             items: {
               bsonType: "string",
+              pattern: "^[A-Z]{3,3}$"
             }
           }
         }
