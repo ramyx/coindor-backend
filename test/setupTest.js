@@ -7,7 +7,6 @@ const { assert } = chai;
 chai.use(chaiHttp);
 
 describe('Initialize Database', function() {
-
   const url = `mongodb://${settings.host}:${settings.dbPort}`;
   const dbName = settings.dbName;
   let connection;
@@ -28,18 +27,5 @@ describe('Initialize Database', function() {
 
   it('Database should be initialized', function() {
     return assert.isDefined(db);
-  });
-});
-
-describe('Initialize App', function() {
-  const url = `http://${settings.host}:${settings.appPort}`;
-
-  it('App should be initialized', function(done) {
-    chai.request(url)
-      .get('/')
-      .end((err, res) => {
-        assert.isDefined(res.body);
-        done();
-      });
   });
 });
