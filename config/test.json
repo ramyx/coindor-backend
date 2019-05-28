@@ -2,5 +2,6 @@
   "host": "localhost",
   "dbPort": 27017,
   "appPort": 3000,
-  "dbName": "testDB"
+  "dbName": "testDB",
+  "authSecret": "testSecret"
 }
