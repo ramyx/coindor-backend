@@ -7,30 +7,35 @@ const bcrypt = require('bcryptjs');
 const { assert } = chai;
 chai.use(chaiHttp);
 
-describe('Authenticate', function() {
-  const dbName = settings.dbName;
-  let connection;
-  let db;
-  const dbUrl = `mongodb://${settings.host}:${settings.dbPort}`;
-  const url = `http://${settings.host}:${settings.appPort}`;
+const dbName = settings.dbName;
+let connection;
+let db;
+const dbUrl = `mongodb://${settings.host}:${settings.dbPort}`;
+const url = `http://${settings.host}:${settings.appPort}`;
 
-  let userId;
-  let password;
+let userId;
+let password;
+
+const initializeDB = (done) => {
+  password = bcrypt.hashSync("admin", 8);
+  const lastSession = new Date().getTime();
+  db.dropDatabase((err) => {
+    if (err) throw err;
+    db.collection('user').insertOne({username: "admin", password, lastSession}, (err, result) => {
+      if (err) throw err;
+      userId = result.insertedId;
+      done();
+    });
+  });
+}
+
+describe('Authenticate', function() {
 
   before(function(done) {
     MongoClient.connect(dbUrl, { useNewUrlParser: true }, function(err, client) {
       connection = client;
       db = client.db(dbName);
-      password = bcrypt.hashSync("admin", 8);
-      const lastSession = new Date().getTime();
-      db.dropDatabase((err) => {
-        if (err) throw err;
-        db.collection('user').insertOne({username: "admin", password, lastSession}, (err, result) => {
-          if (err) throw err;
-          userId = result.insertedId;
-          done();
-        });
-      });
+      initializeDB(done);
     });
   });
 
@@ -57,7 +62,7 @@ describe('Authenticate', function() {
         .post('/login')
         .send({username: "admin", password: "1234"})
         .end((err, res) => {
-          assert.equal(res.error.text, '{"auth":false,"token":null}');
+          assert.equal(res.error.text, '{"auth":false,"token":null,"message":"Email or password is wrong"}');
           done();
         });
     });
@@ -71,6 +76,26 @@ describe('Authenticate', function() {
           done();
         });
     });
+
+    it('User tries to log in but failes and exceeds attempts limit', function(done) {
+      chai.request(url)
+        .post('/login')
+        .send({username: "admin", password: "1234"})
+        .end((err, res) => {
+          chai.request(url)
+            .post('/login')
+            .send({username: "admin", password: "1234"})
+            .end((err, res) => {
+              chai.request(url)
+                .post('/login')
+                .send({username: "admin", password: "1234"})
+                .end((err, res) => {
+                  assert.equal(res.error.text, 'Too Many Requests');
+                  done();
+                });
+            });
+        });
+    });
   });
 
   describe('Verify auth header in endpoints', function() {
@@ -78,13 +103,15 @@ describe('Authenticate', function() {
     let token;
 
     before(function(done) {
-      chai.request(url)
+      initializeDB(() => {
+        chai.request(url)
         .post('/login')
         .send({username: "admin", password: "admin"})
         .end((err, res) => {
           token = res.body.token;
           done();
         });
+      });
     });
 
     it('Verifies auth header', function(done) {
