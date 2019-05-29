@@ -50,13 +50,13 @@ const login = (username, password, callback) => {
       return callback({errCode: 404, errMessage: 'No user found.'});
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
-    if (!passwordIsValid) return callback({errCode: 401, errMessage: { auth: false, token: null }});
+    if (!passwordIsValid) return callback({}, { auth: false, token: null , exists: true, isLoggedIn: false });
     const newSession = new Date().getTime();
     updateUser(user._id, { lastSession: newSession }).then(() => {
       const token = jwt.sign({ id: user._id, lastSession: newSession }, secret, {
         expiresIn: 86400 // expires in 24 hours
       });
-      callback({}, { auth: true, token: token })
+      callback({}, { auth: true, isLoggedIn: true, exists: true, token: token })
     }).catch(err => callback({errCode: 500, errMessage: err.message}));
   }).catch(error => callback({errCode: 404, errMessage: error.message}));
 }

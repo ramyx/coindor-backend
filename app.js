@@ -1,10 +1,11 @@
-var express = require('express');
-var bodyParser = require('body-parser')
+const express = require('express');
+const bodyParser = require('body-parser')
 const { initializeServer } = require("./utils/initialization");
 const { modifyUser } = require("./controllers/userController");
-const { verifyAuthHeader, login, register } = require("./utils/auth");
+const { verifyAuthHeader, register } = require("./utils/auth");
+const { loginRoute } = require("./utils/blocks/blocking");
 
-var app = express();
+const app = express();
 
 app.use(bodyParser.json())
 
@@ -35,12 +36,13 @@ app.post('/register', (request, reply) => {
   * @apiBodyParam {String} username 
   * @apiBodyParam {String} password 
 */
-app.post('/login', (request, reply) => {
-  const { username, password } = request.body;
-  login(username, password, function (err, data) {
-    if (!data) return reply.status(500).send(err.errMessage);
-    reply.status(200).send(data);
-  });
+app.post('/login', async (request, reply) => {
+  try {
+    await loginRoute(request, reply);
+  } catch (err) {
+    console.log(err);
+    reply.status(500).send(err.errMessage);
+  }
 });
 
 /**
