@@ -17,13 +17,21 @@ const initializeDatabase = () =>
       db = client.db(dbName);
       db.dropDatabase((err) => {
         if (err) reject(err);
-        addUserSchema(db, (err) => { if (err) { reject(err) } } );
+        addUserSchema(db, (err) => { if (err) { reject(err) } });
         addCoinSchema(db, (err) => { if (err) { reject(err) } } );
         addLoginDeviceSchema(db, (err) => { if (err) { reject(err) } } );
         resolve(db);
       });
     })
   );
+
+const initializeData = async () => {
+    await addUser({
+      username: settings.adminUsername,
+      password: settings.adminPassword
+    });
+    return;
+  };
 
 const getId = (id) => new ObjectId(id);
 

@@ -24,7 +24,7 @@ app.use((request, reply, next) => {
   * @apiBodyParam {String} username 
   * @apiBodyParam {String} password 
 */
-// TODO: limit this endpoint to admin users and build a script that adds an admin user
+// TODO: Add KYC and extra data
 app.post('/register', (request, reply) => {
   const { username, password } = request.body;
   verifyCaptcha(request).then(() => {

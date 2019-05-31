@@ -20,5 +20,7 @@
     "blockDuration": 630720000
   },
   "recaptchaSecretKey": "fakeSecretKey",
-  "disableCaptcha": "true"
+  "disableCaptcha": "true",
+  "adminUsername": "admin",
+  "adminPassword": "admin"
 }
