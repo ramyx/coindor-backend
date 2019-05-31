@@ -1,9 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser')
+const bodyParser = require('body-parser');
+const { verifyCaptcha } = require('./utils/captcha');
 const { initializeServer } = require("./utils/initialization");
 const { modifyUser } = require("./controllers/userController");
 const { verifyAuthHeader, register } = require("./utils/auth");
 const { loginRoute } = require("./utils/blocks/blocking");
+const settings = require("./config/settings");
 
 const app = express();
 
@@ -22,13 +24,15 @@ app.use((request, reply, next) => {
   * @apiBodyParam {String} username 
   * @apiBodyParam {String} password 
 */
-// TODO: limit this endpoint to admin users
+// TODO: limit this endpoint to admin users and build a script that adds an admin user
 app.post('/register', (request, reply) => {
   const { username, password } = request.body;
-  register(username, password, function (err, data) {
-    if (!data) return reply.status(500).send(err);
-    reply.status(200).send(data);
-  });
+  verifyCaptcha(request).then(() => {
+    register(username, password, function (err, data) {
+      if (!data) return reply.status(500).send(err);
+      reply.status(200).send(data);
+    });
+  }).catch(err => reply.status(500).send(err));
 });
 
 /**
@@ -38,9 +42,10 @@ app.post('/register', (request, reply) => {
 */
 app.post('/login', async (request, reply) => {
   try {
-    await loginRoute(request, reply);
+    verifyCaptcha(request).then(async () => {
+      await loginRoute(request, reply);
+    }).catch(err => reply.status(500).send(err));
   } catch (err) {
-    console.log(err);
     reply.status(500).send(err.errMessage);
   }
 });
@@ -62,7 +67,7 @@ app.patch('/api/user/:userId', (request, reply) => {
   });
 })
 
-app.listen(3000, async (err) => {
+app.listen(settings.appPort, async (err) => {
   if (err) {
     throw err;
   }

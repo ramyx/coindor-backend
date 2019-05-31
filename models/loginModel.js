@@ -5,7 +5,6 @@ const getLoginDevice = async (field, fieldValue) => {
   return await getCollection('loginDevice').findOne({ [field]: fieldValue });
 };
 
-
 const registerLoginDevice = async (field, fieldValue) => {
   const existingLoginDevice = await getLoginDevice(field, fieldValue);
   if (existingLoginDevice) {

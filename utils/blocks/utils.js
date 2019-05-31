@@ -11,7 +11,7 @@ const lock = async (field, fieldValue, blockDuration) => {
 
 const refreshAttempts = async (field, fieldValue, loginAttempts) => {
   await updateLoginDevice(field, fieldValue, {
-    loginAttempts,
+    loginAttempts: parseInt(loginAttempts),
     lastAttempt: moment().valueOf(),
     isLocked: false
   });
@@ -25,8 +25,8 @@ const increaseAttempts = async (field, fieldValue, params) =>
           return lock(field, fieldValue, params.blockDuration).then(() => resolve());
         }
         return resolve();
-      });
-    })
+      }).catch(err => reject(err));
+    }).catch(err => reject(err))
   );
 
 const isNotBlocked = (field, fieldValue, params) =>
@@ -37,7 +37,9 @@ const isNotBlocked = (field, fieldValue, params) =>
       } else if (loginDevice.isLocked) {
         const lockTimeEnded = loginDevice.lockUntil < moment().valueOf();
         if (lockTimeEnded) {
-          return refreshAttempts(field, fieldValue, 0).then(() => resolve({ remainingPoints: 1 }));
+          return refreshAttempts(field, fieldValue, "0")
+            .then(() => resolve({ remainingPoints: 1 }))
+            .catch(err => reject(err));
         }
         const result = { remainingPoints: -1 };
         if (field === "ipAddress") {
@@ -48,11 +50,13 @@ const isNotBlocked = (field, fieldValue, params) =>
         const loginAttempsNeedRefresh = !loginDevice.lastAttempt ||
           moment(loginDevice.lastAttempt).add(params.durationOfAttempts, 'seconds').valueOf() < moment().valueOf();
         if (loginAttempsNeedRefresh) {
-          refreshAttempts(field, fieldValue, 1).then(() => resolve({ remainingPoints: 1 }));
+          refreshAttempts(field, fieldValue, "1")
+            .then(() => resolve({ remainingPoints: 1 }))
+            .catch(err => reject(err));
         }
         resolve({ remainingPoints: 1 });
       }
-    })
+    }).catch(err => reject(err))
   );
 
 module.exports = {

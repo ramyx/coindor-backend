@@ -18,5 +18,7 @@
     "maxWrongAttempts": 2,
     "durationOfAttempts": 7776000,
     "blockDuration": 630720000
-  }
+  },
+  "recaptchaSecretKey": "fakeSecretKey",
+  "disableCaptcha": "true"
 }

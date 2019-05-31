@@ -5,7 +5,9 @@ const initializeSettings = () => {
     case "test":
       return require("./test.json");
     default: {
-      return require("./development.json");
+      const newSettings = require("./development.json");
+      newSettings.recaptchaSecretKey = process.env.RECAPTCHA_SECRET;
+      return newSettings;
     }
   }
 }
