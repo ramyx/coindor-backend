@@ -1,5 +1,27 @@
 {
   "host": "localhost",
   "dbPort": 27017,
-  "dbName": "coindorDB"
+  "appPort": 3000,
+  "dbName": "coindorDB",
+  "authSecret": "localSecret",
+  "usernameLoginAttemptParams": {
+    "maxWrongAttempts": 50,
+    "durationOfAttempts": 86400,
+    "blockDuration": 63072000
+  },
+  "ipLoginAttemptParams": {
+    "maxWrongAttempts": 100,
+    "durationOfAttempts": 86400,
+    "blockDuration": 86400
+  },
+  "usernameIpLoginAttemptParams": {
+    "maxWrongAttempts": 10,
+    "durationOfAttempts": 7776000,
+    "blockDuration": 630720000
+  },
+  "recaptchaSecretKey": "fakeSecretKey",
+  "disableCaptcha": "false",
+  "adminUsername": "admin",
+  "adminPassword": "admin", 
+  "adminPasswordHashed": "$2a$08$Yevh/9tIsIctb59d5nygQu640qONKth6WkG2Awke/Iv9mjJMTk2BG"
 }

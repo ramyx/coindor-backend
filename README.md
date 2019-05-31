@@ -6,7 +6,7 @@ This API will provide the necessary endpoints to Coindor App.
 
 ## Technologies
 
-The technologies used were Node.js, Fastify and MongoDB.
+The technologies used were Node.js, Express and MongoDB.
 
 ## Run App (local environment)
 

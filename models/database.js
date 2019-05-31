@@ -3,6 +3,7 @@ const ObjectId = require('mongodb').ObjectID;
 const settings = require("../config/settings");
 const { addCoinSchema } = require("./schemas/coinSchema");
 const { addUserSchema } = require("./schemas/userSchema");
+const { addLoginDeviceSchema } = require("./schemas/loginSchema");
 
 const url = `mongodb://${settings.host}:${settings.dbPort}`;
 const dbName = settings.dbName;
@@ -16,16 +17,21 @@ const initializeDatabase = () =>
       db = client.db(dbName);
       db.dropDatabase((err) => {
         if (err) reject(err);
-        addUserSchema(db, (err) => {
-          if (err) reject(err);
-        });
-        addCoinSchema(db, (err) => {
-          if (err) reject(err);
-        });
+        addUserSchema(db, (err) => { if (err) { reject(err) } });
+        addCoinSchema(db, (err) => { if (err) { reject(err) } } );
+        addLoginDeviceSchema(db, (err) => { if (err) { reject(err) } } );
         resolve(db);
       });
     })
   );
+
+const initializeData = async () => {
+    await addUser({
+      username: settings.adminUsername,
+      password: settings.adminPassword
+    });
+    return;
+  };
 
 const getId = (id) => new ObjectId(id);
 

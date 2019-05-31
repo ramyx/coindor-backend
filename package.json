@@ -9,8 +9,13 @@
     "test-contracts": "cd contracts && truffle test"
   },
   "dependencies": {
-    "fastify": "2.3.0",
-    "mongodb": "3.2.5"
+    "bcryptjs": "2.4.3",
+    "body-parser": "1.19.0",
+    "express": "4.17.1",
+    "jsonwebtoken": "8.5.1",
+    "moment": "2.24.0",
+    "mongodb": "3.2.5",
+    "request": "2.88.0"
   },
   "devDependencies": {
     "chai": "4.2.0",

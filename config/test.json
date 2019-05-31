@@ -2,5 +2,25 @@
   "host": "localhost",
   "dbPort": 27017,
   "appPort": 3000,
-  "dbName": "testDB"
+  "dbName": "testDB",
+  "authSecret": "testSecret",
+  "usernameLoginAttemptParams": {
+    "maxWrongAttempts": 3,
+    "durationOfAttempts": 86400,
+    "blockDuration": 63072000
+  },
+  "ipLoginAttemptParams": {
+    "maxWrongAttempts": 4,
+    "durationOfAttempts": 86400,
+    "blockDuration": 86400
+  },
+  "usernameIpLoginAttemptParams": {
+    "maxWrongAttempts": 2,
+    "durationOfAttempts": 7776000,
+    "blockDuration": 630720000
+  },
+  "recaptchaSecretKey": "fakeSecretKey",
+  "disableCaptcha": "true",
+  "adminUsername": "admin",
+  "adminPassword": "admin"
 }
