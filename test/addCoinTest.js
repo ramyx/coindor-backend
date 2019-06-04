@@ -2,19 +2,17 @@ const chai = require('chai');
 const chaiHttp = require('chai-http');
 const settings = require('../config/test.json');
 const { initializeDB, closeConnection } = require('./initializeData');
-require('../app');
 
 const { assert } = chai;
 chai.use(chaiHttp);
 
-describe('Select coins', function() {
+describe('Add coin', function() {
+
   const url = `http://${settings.host}:${settings.appPort}`;
   let token;
-  let userId;
 
   before(function(done) {
-    initializeDB(({adminId}) => {
-      userId = adminId;
+    initializeDB(() => {
       chai.request(url)
         .post('/login')
         .send({username: "admin2", password: "admin"})
@@ -23,31 +21,20 @@ describe('Select coins', function() {
           done();
         })
     });
-  });
+  })
 
   after(function(done) {
     closeConnection();
     done();
   })
 
-  it('Coins are added', function(done) {
+  it('Admin adds coin', function(done) {
     chai.request(url)
-      .patch('/api/user/' + userId)
+      .post('/api/admin/coin')
       .set('x-access-token', token)
-      .send({coins: ["ARS"], coins: ["EUR"]})
+      .send({prefix: "EUR", name: "Euro"})
       .end((err, res) => {
         assert.equal(res.text, 'Successfully modified');
-        done();
-      });
-  });
-
-  it('Try to add coins, but user doesn\'t exist', function(done) {
-    chai.request(url)
-      .patch('/api/user/aaaaaaaaaaaaaaaaaaaaaaaa')
-      .set('x-access-token', token)
-      .send({coins: ["ARS"]})
-      .end((err, res) => {
-        assert.equal(res.text, 'User doesn\'t exist');
         done();
       });
   });

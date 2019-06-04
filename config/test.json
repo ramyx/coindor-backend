@@ -22,5 +22,6 @@
   "recaptchaSecretKey": "fakeSecretKey",
   "disableCaptcha": "true",
   "adminUsername": "admin",
-  "adminPassword": "admin"
+  "adminPassword": "admin",
+  "adminPasswordHashed": "$2a$08$Yevh/9tIsIctb59d5nygQu640qONKth6WkG2Awke/Iv9mjJMTk2BG"
 }

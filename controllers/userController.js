@@ -10,6 +10,17 @@ const modifyUser = (userId, newFields, cb) => {
   }
 }
 
+const approveUser = (userId, cb) => {
+  try {
+    updateUser(userId, { status: 'approved' })
+      .then(() => cb())
+      .catch(err => cb(err));
+  } catch (err) {
+    cb(err); 
+  }
+}
+
 module.exports = {
-  modifyUser
+  modifyUser,
+  approveUser
 };

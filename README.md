@@ -8,6 +8,15 @@ This API will provide the necessary endpoints to Coindor App.
 
 The technologies used were Node.js, Express and MongoDB.
 
+## Endpoints
+
+- **POST /register**
+- **POST /login**
+- **PATCH /api/user/:userId** : Modifies a user. The only fields allowed to modify are coins.
+- **POST /api/admin/approve/:userId** : Approves a registered user.
+- **POST /api/admin/coin** : Adds new coin.
+- **PATCH /api/admin/coin** : Modifies coin.
+
 ## Run App (local environment)
 
 An instance of MongoDB should be running at port 27017. Then execute the following command at root directory:
@@ -16,11 +25,7 @@ An instance of MongoDB should be running at port 27017. Then execute the followi
 
 ## Run Tests
 
-The tests were done using Mocha and Chai.
-First, the app must be running with the testing settings; this is done by executing:
-
-> npm run start-test
-
-And then, in another terminal, run the tests with the following command:
+The tests were done using Mocha and Chai. An instance of MongoDB should be running at port 27017.
+To run tests execute:
 
 > npm run test

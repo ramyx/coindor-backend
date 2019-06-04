@@ -1,46 +1,25 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const MongoClient = require('mongodb').MongoClient;
 const settings = require('../config/test.json');
-const bcrypt = require('bcryptjs');
+const { initializeDB, closeConnection } = require('./initializeData');
 
 const { assert } = chai;
 chai.use(chaiHttp);
 
-const dbName = settings.dbName;
-let connection;
-let db;
-const dbUrl = `mongodb://${settings.host}:${settings.dbPort}`;
-const url = `http://${settings.host}:${settings.appPort}`;
-
-let userId;
-let password;
-
-const initializeDB = (done) => {
-  password = bcrypt.hashSync("admin", 8);
-  const lastSession = new Date().getTime();
-  db.dropDatabase((err) => {
-    if (err) throw err;
-    db.collection('user').insertOne({username: "admin", password, lastSession}, (err, result) => {
-      if (err) throw err;
-      userId = result.insertedId;
-      done();
-    });
-  });
-}
-
 describe('Authenticate', function() {
 
+  const url = `http://${settings.host}:${settings.appPort}`;
+  let userId;
+
   before(function(done) {
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function(err, client) {
-      connection = client;
-      db = client.db(dbName);
-      initializeDB(done);
+    initializeDB(({adminId}) => {
+      userId = adminId;
+      done();
     });
-  });
+  })
 
   after(function(done) {
-    connection.close();
+    closeConnection();
     done();
   })
 
@@ -49,7 +28,7 @@ describe('Authenticate', function() {
     it('Admin user logs in', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "admin", password: "admin"})
+        .send({username: "admin2", password: "admin"})
         .end((err, res) => {
           assert.equal(res.body.auth, true);
           assert.isDefined(res.body.token);
@@ -60,7 +39,7 @@ describe('Authenticate', function() {
     it('Admin user tries to log in but password is invalid', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "admin", password: "1234"})
+        .send({username: "admin2", password: "1234"})
         .end((err, res) => {
           assert.equal(res.error.text, '{"auth":false,"token":null,"message":"Email or password is wrong"}');
           done();
@@ -70,7 +49,7 @@ describe('Authenticate', function() {
     it('User tries to log in but it doesn\'t exist', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "user", password: "1234"})
+        .send({username: "notExistingUser", password: "1234"})
         .end((err, res) => {
           assert.equal(res.error.text, 'No user found.');
           done();
@@ -80,15 +59,15 @@ describe('Authenticate', function() {
     it('User tries to log in but failes and exceeds attempts limit', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "admin", password: "1234"})
+        .send({username: "admin2", password: "1234"})
         .end((err, res) => {
           chai.request(url)
             .post('/login')
-            .send({username: "admin", password: "1234"})
+            .send({username: "admin2", password: "1234"})
             .end((err, res) => {
               chai.request(url)
                 .post('/login')
-                .send({username: "admin", password: "1234"})
+                .send({username: "admin2", password: "1234"})
                 .end((err, res) => {
                   assert.equal(res.error.text, 'Too Many Requests');
                   done();
@@ -103,14 +82,15 @@ describe('Authenticate', function() {
     let token;
 
     before(function(done) {
-      initializeDB(() => {
+      initializeDB(({adminId}) => {
+        userId = adminId;
         chai.request(url)
-        .post('/login')
-        .send({username: "admin", password: "admin"})
-        .end((err, res) => {
-          token = res.body.token;
-          done();
-        });
+          .post('/login')
+          .send({username: "admin2", password: "admin"})
+          .end((err, res) => {
+            token = res.body.token;
+            done();
+          });
       });
     });
 
@@ -160,7 +140,7 @@ describe('Authenticate', function() {
     it('Verifies auth header but token has expired', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "admin", password: "admin"})
+        .send({username: "admin2", password: "admin"})
         .end((err, res) => {
           chai.request(url)
             .patch('/api/user/' + userId)

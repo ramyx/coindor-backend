@@ -4,7 +4,8 @@ const settings = require("../config/settings");
 const initializeData = async () => {
   await addUser({
     username: settings.adminUsername,
-    password: settings.adminPasswordHashed
+    password: settings.adminPasswordHashed,
+    role: 'admin'
   });
   return;
 };
