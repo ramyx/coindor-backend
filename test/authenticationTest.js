@@ -12,8 +12,8 @@ describe('Authenticate', function() {
   let userId;
 
   before(function(done) {
-    initializeDB((newUserId) => {
-      userId = newUserId;
+    initializeDB(({adminId}) => {
+      userId = adminId;
       done();
     });
   })
@@ -49,7 +49,7 @@ describe('Authenticate', function() {
     it('User tries to log in but it doesn\'t exist', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "user", password: "1234"})
+        .send({username: "notExistingUser", password: "1234"})
         .end((err, res) => {
           assert.equal(res.error.text, 'No user found.');
           done();
@@ -82,8 +82,8 @@ describe('Authenticate', function() {
     let token;
 
     before(function(done) {
-      initializeDB((newUserId) => {
-        userId = newUserId;
+      initializeDB(({adminId}) => {
+        userId = adminId;
         chai.request(url)
           .post('/login')
           .send({username: "admin2", password: "admin"})
