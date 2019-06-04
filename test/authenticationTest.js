@@ -1,7 +1,9 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const settings = require('../config/test.json');
-const { initializeDB, closeConnection } = require('./initializeData');
+const { initializeDB, closeConnection } = require('./utils/database');
+const { login } = require('./utils/common');
+require('../app');
 
 const { assert } = chai;
 chai.use(chaiHttp);
@@ -84,13 +86,10 @@ describe('Authenticate', function() {
     before(function(done) {
       initializeDB(({adminId}) => {
         userId = adminId;
-        chai.request(url)
-          .post('/login')
-          .send({username: "admin2", password: "admin"})
-          .end((err, res) => {
-            token = res.body.token;
-            done();
-          });
+        login("admin2", "admin", (result) => {
+          token = result
+          done();
+        });
       });
     });
 

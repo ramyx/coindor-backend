@@ -1,5 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
-const settings = require('../config/test.json');
+const settings = require('../../config/test.json');
 const bcrypt = require('bcryptjs');
 
 const dbName = settings.dbName;
@@ -29,6 +29,13 @@ const initializeDB = (cb) => {
   });
 }
 
+const addCoin = (coin, cb) => {
+  db.collection('coin').insertOne(coin, (err, result) => {
+    if (err) throw err;
+    cb(result.insertedId);
+  });
+}
+
 const closeConnection = () => connection.close();
 
 after(function(done) {
@@ -38,5 +45,6 @@ after(function(done) {
 
 module.exports = {
   initializeDB,
+  addCoin,
   closeConnection
 }
