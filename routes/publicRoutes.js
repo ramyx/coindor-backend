@@ -28,7 +28,7 @@ module.exports = {
     app.post('/login', async (request, reply) => {
       try {
         verifyCaptcha(request).then(async () => {
-          await loginRoute(request, reply);
+          return await loginRoute(request, reply);
         }).catch(err => reply.status(500).send(err));
       } catch (err) {
         reply.status(500).send(err.errMessage);

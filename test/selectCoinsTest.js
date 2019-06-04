@@ -1,47 +1,32 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
-const MongoClient = require('mongodb').MongoClient;
 const settings = require('../config/test.json');
-const bcrypt = require('bcryptjs');
+const { initializeDB, closeConnection } = require('./initializeData');
+require('../app');
 
 const { assert } = chai;
 chai.use(chaiHttp);
 
 describe('Select coins', function() {
-  const dbName = settings.dbName;
-  let connection;
-  let db;
-  const dbUrl = `mongodb://${settings.host}:${settings.dbPort}`;
   const url = `http://${settings.host}:${settings.appPort}`;
-
-  let userId;
   let token;
+  let userId;
 
   before(function(done) {
-    MongoClient.connect(dbUrl, { useNewUrlParser: true }, function(err, client) {
-      connection = client;
-      db = client.db(dbName);
-      password = bcrypt.hashSync("admin", 8);
-      const lastSession = new Date().getTime();
-      db.dropDatabase((err) => {
-        if (err) throw err;
-        db.collection('user').insertOne({username: "admin", password, lastSession }, (err, result) => {
-          if (err) throw err;
-          userId = result.insertedId;
-          chai.request(url)
-            .post('/login')
-            .send({username: "admin", password: "admin"})
-            .end((err, res) => {
-              token = res.body.token;
-              done();
-            });
-        });
-      });
+    initializeDB((newUserId) => {
+      userId = newUserId;
+      chai.request(url)
+        .post('/login')
+        .send({username: "admin2", password: "admin"})
+        .end((err, res) => {
+          token = res.body.token;
+          done();
+        })
     });
   });
 
   after(function(done) {
-    connection.close();
+    closeConnection();
     done();
   })
 

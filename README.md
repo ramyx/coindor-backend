@@ -16,11 +16,7 @@ An instance of MongoDB should be running at port 27017. Then execute the followi
 
 ## Run Tests
 
-The tests were done using Mocha and Chai.
-First, the app must be running with the testing settings; this is done by executing:
-
-> npm run start-test
-
-And then, in another terminal, run the tests with the following command:
+The tests were done using Mocha and Chai. An instance of MongoDB should be running at port 27017.
+To run tests execute:
 
 > npm run test
