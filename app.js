@@ -28,6 +28,6 @@ app.listen(settings.appPort, async (err) => {
   if (err) {
     throw err;
   }
-  console.log('Example app listening on port 3000!');
+  console.log('Coindor Backend listening on port ' + settings.appPort + '!');
   await initializeServer();
 })

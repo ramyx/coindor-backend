@@ -15,7 +15,7 @@ The technologies used were Node.js, Express and MongoDB.
 - **PATCH /api/user/:userId** : Modifies a user. The only fields allowed to modify are coins.
 - **POST /api/admin/approve/:userId** : Approves a registered user.
 - **POST /api/admin/coin** : Adds new coin.
-- **PATCH /api/admin/coin** : Modifies coin.
+- **PATCH /api/admin/coin/:coinId** : Modifies coin.
 
 ## Run App (local environment)
 
