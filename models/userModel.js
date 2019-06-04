@@ -2,6 +2,10 @@ const { getCollection, getId } = require("./database");
 
 const addUser = async (user) => {
   user.lastSession = new Date().getTime();
+  if (!user.role) {
+    user.role = 'user';
+    user.status = 'pending';
+  }
   return await getCollection('user').insertOne(user);
 };
 

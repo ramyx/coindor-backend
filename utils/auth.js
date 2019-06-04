@@ -20,7 +20,7 @@ const register = (username, password, callback) => {
     .catch((err) => callback(err.message));
 }
 
-const verifyAuthHeader = (token, res, next) => {
+const verifyAuthHeader = (token, shouldBeAdmin, res, next) => {
   if (!token) {
     return res.status(401).send({ auth: false, message: 'No token provided.' });
   } else {
@@ -34,6 +34,8 @@ const verifyAuthHeader = (token, res, next) => {
               return res.status(404).send("No user found.");
             } else if (decoded.lastSession !== user.lastSession) {
               return res.status(500).send("Token has expired");
+            } else if (shouldBeAdmin && user.role !== 'admin') {
+              return res.status(500).send("Not allowed");
             } else {
               next();
             }
@@ -48,6 +50,9 @@ const login = (username, password, callback) => {
   getUserByUsername(username).then((user) => {
     if (!user) {
       return callback({errCode: 404, errMessage: 'No user found.'});
+    }
+    if (user.role !== 'admin' && user.status !== 'approved') {
+      return callback({errCode: 500, errMessage: 'User hasn\'t been approved yet'});
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     if (!passwordIsValid) return callback({}, { auth: false, token: null , exists: true, isLoggedIn: false });
