@@ -3,16 +3,18 @@ const { register } = require("../utils/auth");
 const { loginRoute } = require("../utils/blocks/blocking");
 const { checkLoginSchema } = require('./paramsSchemas/loginRouteSchema');
 const { checkValidationResult } = require('./paramsSchemas/errorHandling');
+const { checkRegisterSchema } = require('./paramsSchemas/registerRouteSchema');
 
 module.exports = {
   setupPublicRoutes: (app) => {
     /**
       * @api {post} /register Registers user
       * @apiBodyParam {String} username 
-      * @apiBodyParam {String} password 
+      * @apiBodyParam {String} password
+      * @apiBodyParam {String} confirmPassword 
     */
     // TODO: Add KYC and extra data
-    app.post('/register', (request, reply) => {
+    app.post('/register', checkRegisterSchema, checkValidationResult, (request, reply) => {
       const { username, password } = request.body;
       verifyCaptcha(request).then(() => {
         register(username, password, function (err, data) {

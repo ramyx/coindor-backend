@@ -1,5 +1,7 @@
 const { approveUser } = require("../controllers/userController");
 const { addNewCoin, editCoin } = require("../controllers/coinController");
+const { checkValidationResult } = require('./paramsSchemas/errorHandling');
+const { checkApproveUserSchema } = require('./paramsSchemas/approveRouteSchema');
 
 module.exports = {
   setupAdminRoutes: (app) => {
@@ -8,7 +10,7 @@ module.exports = {
       * @apiPermission authenticated admin user
       * @apiParam {String} userId
     */
-    app.post('/api/admin/approve/:userId', (request, reply) => {
+    app.post('/api/admin/approve/:userId', checkApproveUserSchema, checkValidationResult, (request, reply) => {
       const { userId } = request.params;
       approveUser(userId, (err) => {
         if (err) {
@@ -45,7 +47,8 @@ module.exports = {
     */
     app.patch('/api/admin/coin/:coinId', (request, reply) => {
       const { coinId } = request.params;
-      const coin = request.body;
+      const { prefix, name, sellRate, buyRate } = request.body;
+      const coin = JSON.parse(JSON.stringify({ prefix, name, sellRate, buyRate }));
       editCoin(coinId, coin, (err) => {
         if (err) {
           return reply.status(500).send(err.message);

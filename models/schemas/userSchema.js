@@ -29,8 +29,7 @@ const addUserSchema = (db, callback) => {
             coins: {
               bsonType: "array",
               items: {
-                bsonType: "string",
-                pattern: "^[A-Z]{3,3}$"
+                bsonType: "string"
               }
             }
           }

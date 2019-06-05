@@ -20,7 +20,7 @@ const register = (username, password, callback) => {
     .catch((err) => callback(err.message));
 }
 
-const verifyAuthHeader = (token, shouldBeAdmin, res, next) => {
+const verifyAuthHeader = (token, shouldBeAdmin, userId, res, next) => {
   if (!token) {
     return res.status(401).send({ auth: false, message: 'No token provided.' });
   } else {
@@ -36,6 +36,8 @@ const verifyAuthHeader = (token, shouldBeAdmin, res, next) => {
               return res.status(500).send("Token has expired");
             } else if (shouldBeAdmin && user.role !== 'admin') {
               return res.status(500).send("Not allowed");
+            } else if (userId && user._id !== userId) {
+              return res.status(500).send("Not allowed to modify given user");
             } else {
               next();
             }

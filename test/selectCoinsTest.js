@@ -32,7 +32,7 @@ describe('Select coins', function() {
     chai.request(url)
       .patch('/api/user/' + userId)
       .set('x-access-token', token)
-      .send({coins: ["ARS"], coins: ["EUR"]})
+      .send({coins: ["ARS", "EUR"]})
       .end((err, res) => {
         assert.equal(res.text, 'Successfully modified');
         done();
