@@ -9,7 +9,7 @@ const { setupAdminRoutes } = require("./routes/adminRoutes");
 
 const app = express();
 
-app.use(bodyParser.json())
+app.use(bodyParser.json());
 
 app.use((request, reply, next) => {
   if (request.originalUrl.includes('/api/')) {

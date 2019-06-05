@@ -1,6 +1,8 @@
 const { verifyCaptcha } = require('../utils/captcha');
 const { register } = require("../utils/auth");
 const { loginRoute } = require("../utils/blocks/blocking");
+const { checkLoginSchema } = require('./paramsSchemas/loginRouteSchema');
+const { checkValidationResult } = require('./paramsSchemas/errorHandling');
 
 module.exports = {
   setupPublicRoutes: (app) => {
@@ -25,7 +27,7 @@ module.exports = {
       * @apiBodyParam {String} username 
       * @apiBodyParam {String} password 
     */
-    app.post('/login', async (request, reply) => {
+    app.post('/login', checkLoginSchema, checkValidationResult, async (request, reply) => {
       try {
         verifyCaptcha(request).then(async () => {
           return await loginRoute(request, reply);
