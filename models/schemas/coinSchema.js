@@ -12,6 +12,14 @@ const addCoinSchema = (db, callback) => db.createCollection("coin", {
           name: {
             bsonType: "string",
             description: "must be a string and is required"
+          },
+          sellRate: {
+            bsonType: "float",
+            description: "must be float"
+          },
+          buyRate: {
+            bsonType: "float",
+            description: "must be float"
           }
         }
      }
