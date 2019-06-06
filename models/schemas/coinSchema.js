@@ -1,5 +1,5 @@
-const addCoinSchema = (db, callback) => {
-  db.createCollection("coin", {
+const addCoinSchema = async (db) => {
+  await db.createCollection("coin", {
     validator: {
       $jsonSchema: {
           bsonType: "object",
@@ -15,18 +15,19 @@ const addCoinSchema = (db, callback) => {
               description: "must be a string and is required"
             },
             sellRate: {
-              bsonType: "float",
-              description: "must be float"
+              bsonType: "double",
+              description: "must be double"
             },
             buyRate: {
-              bsonType: "float",
-              description: "must be float"
+              bsonType: "double",
+              description: "must be double"
             }
           }
       }
     }
-  }, callback);
-  db.collection("coin").createIndex( { "prefix": 1 }, { unique: true } );
+  });
+  await db.collection("coin").createIndex( { "prefix": 1 }, { unique: true } );
+  return;
 };
 
 module.exports = {

@@ -1,7 +1,8 @@
+const Timestamp = require('mongodb').Timestamp;
 const { getCollection, getId } = require("./database");
 
 const addUser = async (user) => {
-  user.lastSession = new Date().getTime();
+  user.lastSession = new Timestamp(new Date().getTime(), 1);
   if (!user.role) {
     user.role = 'user';
     user.status = 'pending';

@@ -1,7 +1,7 @@
 const { check } = require('express-validator/check');
 const { getCoinById } = require('../../models/coinModel');
 
-const addCoinSchema = [
+const checkPatchCoinSchema = [
   check('coinId')
     .exists().withMessage('must exist')
     .not().isEmpty().withMessage('cannot be empty')
@@ -11,20 +11,24 @@ const addCoinSchema = [
       return coin;
     }).withMessage('must be an existing coin'),
   check('prefix')
+    .optional()
     .not().isEmpty().withMessage('cannot be empty')
     .isString().withMessage('must be a string')
     .matches(/^([A-Z]){3,3}$$/).withMessage('must be uppercase and 3 characters long'),
   check('name')
+    .optional()
     .not().isEmpty().withMessage('cannot be empty')
     .isString().withMessage('must be a string'),
   check('sellRate')
+    .optional()
     .not().isEmpty().withMessage('cannot be empty')
     .isFloat().withMessage('must be a string'),
   check('buyRate')
+    .optional()
     .not().isEmpty().withMessage('cannot be empty')
     .isFloat().withMessage('must be a string')
 ];
 
 module.exports = {
-  addCoinSchema
+  checkPatchCoinSchema
 }

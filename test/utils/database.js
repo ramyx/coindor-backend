@@ -1,4 +1,5 @@
 const MongoClient = require('mongodb').MongoClient;
+const Timestamp = require('mongodb').Timestamp;
 const settings = require('../../config/test.json');
 const bcrypt = require('bcryptjs');
 
@@ -13,7 +14,7 @@ const initializeDB = (cb) => {
     db = client.db(dbName);
     const adminPassword = bcrypt.hashSync("admin", 8);
     const userPassword = bcrypt.hashSync("user", 8);
-    const lastSession = new Date().getTime();
+    const lastSession = new Timestamp(new Date().getTime(), 1);
     db.dropDatabase((err) => {
       if (err) throw err;
       db.collection('user').insertOne({username: "admin2", password: adminPassword, role:'admin', lastSession}, (err, adminResult) => {

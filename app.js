@@ -13,9 +13,8 @@ app.use(bodyParser.json());
 
 app.use((request, reply, next) => {
   if (request.originalUrl.includes('/api/')) {
-    const { userId } = request.params;
     const shouldBeAdmin = request.originalUrl.includes('/admin/');
-    verifyAuthHeader(request.headers['x-access-token'], shouldBeAdmin, userId, reply, next);
+    verifyAuthHeader(request.headers['x-access-token'], shouldBeAdmin, request, reply, next);
   } else {
     next();
   }

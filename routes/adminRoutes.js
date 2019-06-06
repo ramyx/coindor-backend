@@ -2,6 +2,8 @@ const { approveUser } = require("../controllers/userController");
 const { addNewCoin, editCoin } = require("../controllers/coinController");
 const { checkValidationResult } = require('./paramsSchemas/errorHandling');
 const { checkApproveUserSchema } = require('./paramsSchemas/approveRouteSchema');
+const { checkAddCoinSchema } = require('./paramsSchemas/addCoinRouteSchema');
+const { checkPatchCoinSchema } = require('./paramsSchemas/patchCoinRouteSchema');
 
 module.exports = {
   setupAdminRoutes: (app) => {
@@ -26,7 +28,7 @@ module.exports = {
       * @apiBodyParam {String} prefix -> coin prefix; e.g: "EUR"
       * @apiBodyParam {String} name 
     */
-    app.post('/api/admin/coin', (request, reply) => {
+    app.post('/api/admin/coin', checkAddCoinSchema, checkValidationResult, (request, reply) => {
       const { prefix, name } = request.body;
       addNewCoin(prefix, name, (err) => {
         if (err) {
@@ -45,7 +47,7 @@ module.exports = {
       * @apiBodyParam {Decimal} sellRate -> e.g: -4.5
       * @apiBodyParam {Decimal} buyRate
     */
-    app.patch('/api/admin/coin/:coinId', (request, reply) => {
+    app.patch('/api/admin/coin/:coinId', checkPatchCoinSchema, checkValidationResult, (request, reply) => {
       const { coinId } = request.params;
       const { prefix, name, sellRate, buyRate } = request.body;
       const coin = JSON.parse(JSON.stringify({ prefix, name, sellRate, buyRate }));

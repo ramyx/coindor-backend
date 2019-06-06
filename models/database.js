@@ -17,10 +17,14 @@ const initializeDatabase = () =>
       db = client.db(dbName);
       db.dropDatabase((err) => {
         if (err) reject(err);
-        addUserSchema(db, (err) => { if (err) { reject(err) } });
-        addCoinSchema(db, (err) => { if (err) { reject(err) } } );
-        addLoginDeviceSchema(db, (err) => { if (err) { reject(err) } } );
-        resolve(db);
+        const schemaPromises = [
+          addUserSchema(db),
+          addCoinSchema(db),
+          addLoginDeviceSchema(db)
+        ];
+        Promise.all(schemaPromises).then(function(values) {
+          resolve(db);
+        }).catch(err => reject(err));
       });
     })
   );
