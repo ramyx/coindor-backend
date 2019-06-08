@@ -16,7 +16,7 @@ describe('Add rates to coin', function() {
 
   before(function(done) {
     initializeDB(() => {
-      login("admin2", "admin", (result) => {
+      login("admin2", "Admin1234", (result) => {
         token = result;
         addCoin({prefix: "USD", name: "Dollar"}, (newCoinId) => {
           coinId = newCoinId;

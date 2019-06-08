@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { initializeServer } = require("./utils/initialization");
+const { initializeServer } = require("./utils/initialize/initialization");
 const { verifyAuthHeader } = require("./utils/auth");
 const settings = require("./config/settings");
 const { setupPublicRoutes } = require("./routes/publicRoutes");

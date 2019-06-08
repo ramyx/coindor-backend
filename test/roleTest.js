@@ -17,16 +17,11 @@ describe('Roles', function() {
   before(function(done) {
     initializeDB(result => {
       userId = result.userId;
-      login("admin2", "admin", (result) => {
+      login("admin2", "Admin1234", (result) => {
         token = result
         done();
       });
     });
-  })
-
-  after(function(done) {
-    closeConnection();
-    done();
   })
 
   describe('Log in approval', function() {
@@ -34,7 +29,7 @@ describe('Roles', function() {
     it('User tries to log in but hasn\'t been approved yet', function(done) {
       chai.request(url)
         .post('/login')
-        .send({username: "user", password: "user"})
+        .send({username: "user", password: "User1234"})
         .end((err, res) => {
           assert.equal(res.error.text, 'User hasn\'t been approved yet');
           done();
@@ -50,7 +45,7 @@ describe('Roles', function() {
           assert.equal(res.text, 'Successfully modified');
           chai.request(url)
             .post('/login')
-            .send({username: "user", password: "user"})
+            .send({username: "user", password: "User1234"})
             .end((err, res) => {
               assert.equal(res.body.auth, true);
               done();
@@ -64,7 +59,7 @@ describe('Roles', function() {
     let userToken;
 
     before(function(done) {
-      login("user", "user", (result) => {
+      login("user", "User1234", (result) => {
         userToken = result
         done();
       });

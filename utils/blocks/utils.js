@@ -1,9 +1,8 @@
 const moment = require("moment");
-const { getTimestamp } = require('../../models/database');
 const { increaseLoginAttempts, updateLoginDevice, getLoginDevice } = require("../../models/loginModel");
 
 const lock = async (field, fieldValue, blockDuration) => {
-  const lockUntil = getTimestamp(moment().add(blockDuration, 'seconds').valueOf());
+  const lockUntil = moment().add(blockDuration, 'seconds').toDate();
   await updateLoginDevice(field, fieldValue, {
     lockUntil,
     isLocked: true
@@ -13,7 +12,7 @@ const lock = async (field, fieldValue, blockDuration) => {
 const refreshAttempts = async (field, fieldValue, loginAttempts) => {
   await updateLoginDevice(field, fieldValue, {
     loginAttempts: parseInt(loginAttempts),
-    lastAttempt: getTimestamp(new Date().getTime()),
+    lastAttempt: new Date(),
     isLocked: false
   });
 }
@@ -36,7 +35,7 @@ const isNotBlocked = (field, fieldValue, params) =>
       if (!loginDevice) {
         resolve({ remainingPoints: 1 });
       } else if (loginDevice.isLocked) {
-        const lockTimeEnded = loginDevice.lockUntil.toString() < moment().valueOf();
+        const lockTimeEnded = new Date(loginDevice.lockUntil).getTime() < moment().valueOf();
         if (lockTimeEnded) {
           return refreshAttempts(field, fieldValue, "0")
             .then(() => resolve({ remainingPoints: 1 }))
@@ -44,12 +43,12 @@ const isNotBlocked = (field, fieldValue, params) =>
         }
         const result = { remainingPoints: -1 };
         if (field === "ipAddress") {
-          result.msBeforeNext = moment(loginDevice.lockUntil.toString()).diff(moment());
+          result.msBeforeNext = moment(new Date(loginDevice.lockUntil)).diff(moment());
         }
         resolve(result);
       } else {
         const loginAttempsNeedRefresh = !loginDevice.lastAttempt ||
-          moment(loginDevice.lastAttempt.toString()).add(params.durationOfAttempts, 'seconds').valueOf() < moment().valueOf();
+          moment(new Date(loginDevice.lastAttempt)).add(params.durationOfAttempts, 'seconds').valueOf() < moment().valueOf();
         if (loginAttempsNeedRefresh) {
           refreshAttempts(field, fieldValue, "1")
             .then(() => resolve({ remainingPoints: 1 }))

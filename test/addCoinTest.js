@@ -15,7 +15,7 @@ describe('Add coin', function() {
 
   before(function(done) {
     initializeDB(() => {
-      login("admin2", "admin", (result) => {
+      login("admin2", "Admin1234", (result) => {
         token = result
         done();
       });

@@ -1,7 +1,6 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const { getTimestamp } = require('../models/database');
 const { addUser, getUserById, getUserByUsername, updateUser } = require('../models/userModel');
 const { authSecret } = require("../config/settings");
 
@@ -33,7 +32,7 @@ const verifyAuthHeader = (token, shouldBeAdmin, request, res, next) => {
           .then(user => {
             if (!user) {
               return res.status(404).send("No user found.");
-            } else if (decoded.lastSession !== user.lastSession.toString()) {
+            } else if (new Date(decoded.lastSession).getTime() !== new Date(user.lastSession).getTime()) {
               return res.status(500).send("Token has expired");
             } else if (shouldBeAdmin && user.role !== 'admin') {
               return res.status(500).send("Not allowed");
@@ -58,7 +57,7 @@ const login = (username, password, callback) => {
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     if (!passwordIsValid) return callback({}, { auth: false, token: null , exists: true, isLoggedIn: false });
-    const newSession = getTimestamp(new Date().getTime());
+    const newSession = new Date();
     updateUser(user._id, { lastSession: newSession }).then(() => {
       const token = jwt.sign({ id: user._id, lastSession: newSession }, secret, {
         expiresIn: 86400 // expires in 24 hours

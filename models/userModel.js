@@ -1,7 +1,7 @@
-const { getCollection, getId, getTimestamp } = require("./database");
+const { getCollection, getId } = require("./database");
 
 const addUser = async (user) => {
-  user.lastSession = getTimestamp(new Date().getTime());
+  user.lastSession = new Date();
   if (!user.role) {
     user.role = 'user';
     user.status = 'pending';

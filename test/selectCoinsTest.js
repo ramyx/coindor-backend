@@ -12,12 +12,14 @@ describe('Select coins', function() {
   const url = `http://${settings.host}:${settings.appPort}`;
   let token;
   let userId;
+  let insertedCoinId;
 
   before(function(done) {
-    initializeDB(({adminId}) => {
+    initializeDB(({adminId, coinId}) => {
       userId = adminId;
-      login("admin2", "admin", (result) => {
-        token = result
+      insertedCoinId = coinId;
+      login("admin2", "Admin1234", (result) => {
+        token = result;
         done();
       });
     });
@@ -32,21 +34,11 @@ describe('Select coins', function() {
     chai.request(url)
       .patch('/api/user/' + userId)
       .set('x-access-token', token)
-      .send({coins: ["ARS", "EUR"]})
+      .send({coins: [insertedCoinId]})
       .end((err, res) => {
         assert.equal(res.text, 'Successfully modified');
         done();
       });
   });
 
-  it('Try to add coins, but user doesn\'t exist', function(done) {
-    chai.request(url)
-      .patch('/api/user/aaaaaaaaaaaaaaaaaaaaaaaa')
-      .set('x-access-token', token)
-      .send({coins: ["ARS"]})
-      .end((err, res) => {
-        assert.equal(res.text, 'User doesn\'t exist');
-        done();
-      });
-  });
 });

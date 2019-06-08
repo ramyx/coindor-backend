@@ -22,12 +22,12 @@ const addLoginDeviceSchema = async (db) => {
               description: "must be a int"
             },
             lastAttempt: {
-              bsonType: "timestamp",
-              description: "must be a timestamp"
+              bsonType: "date",
+              description: "must be a date"
             },
             lockUntil: {
-              bsonType: "timestamp",
-              description: "must be a timestamp"
+              bsonType: "date",
+              description: "must be a date"
             },
             isLocked: {
               bsonType: "bool",

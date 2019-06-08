@@ -24,8 +24,8 @@ const addUserSchema = async (db) => {
               enum: [ "pending", "approved" ]
             },
             lastSession: {
-              bsonType: "timestamp",
-              description: "must be a timestamp"
+              bsonType: "date",
+              description: "must be a date"
             },
             coins: {
               bsonType: "array",

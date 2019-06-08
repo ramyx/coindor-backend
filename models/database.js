@@ -1,4 +1,4 @@
-const { MongoClient, Timestamp } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectID;
 const settings = require("../config/settings");
 const { addCoinSchema } = require("./schemas/coinSchema");
@@ -33,11 +33,8 @@ const getId = (id) => new ObjectId(id);
 
 const getCollection = (name) => db.collection(name);
 
-const getTimestamp = (date) => new Timestamp(date, 1);
-
 module.exports = {
   initializeDatabase,
   getCollection,
-  getId,
-  getTimestamp
+  getId
 };
