@@ -1,9 +1,9 @@
 const moment = require("moment");
-const Timestamp = require('mongodb').Timestamp;
+const { getTimestamp } = require('../../models/database');
 const { increaseLoginAttempts, updateLoginDevice, getLoginDevice } = require("../../models/loginModel");
 
 const lock = async (field, fieldValue, blockDuration) => {
-  const lockUntil = new Timestamp(moment().add(blockDuration, 'seconds').valueOf(), 1);
+  const lockUntil = getTimestamp(moment().add(blockDuration, 'seconds').valueOf());
   await updateLoginDevice(field, fieldValue, {
     lockUntil,
     isLocked: true
@@ -13,7 +13,7 @@ const lock = async (field, fieldValue, blockDuration) => {
 const refreshAttempts = async (field, fieldValue, loginAttempts) => {
   await updateLoginDevice(field, fieldValue, {
     loginAttempts: parseInt(loginAttempts),
-    lastAttempt: new Timestamp(new Date().getTime(), 1),
+    lastAttempt: getTimestamp(new Date().getTime()),
     isLocked: false
   });
 }

@@ -1,5 +1,7 @@
 const { check } = require('express-validator/check');
+const { sanitizeBody } = require('express-validator/filter');
 const { getCoinById } = require('../../models/coinModel');
+const { getNumberDecimal } = require('../../models/database');
 
 const checkPatchCoinSchema = [
   check('coinId')

@@ -15,11 +15,11 @@ const addCoinSchema = async (db) => {
               description: "must be a string and is required"
             },
             sellRate: {
-              bsonType: "double",
+              bsonType: ["double", "int"],
               description: "must be double"
             },
             buyRate: {
-              bsonType: "double",
+              bsonType: ["double", "int"],
               description: "must be double"
             }
           }

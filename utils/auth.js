@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const Timestamp = require('mongodb').Timestamp;
+const { getTimestamp } = require('../models/database');
 const { addUser, getUserById, getUserByUsername, updateUser } = require('../models/userModel');
 const { authSecret } = require("../config/settings");
 
@@ -58,7 +58,7 @@ const login = (username, password, callback) => {
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     if (!passwordIsValid) return callback({}, { auth: false, token: null , exists: true, isLoggedIn: false });
-    const newSession = new Timestamp(new Date().getTime(), 1);
+    const newSession = getTimestamp(new Date().getTime());
     updateUser(user._id, { lastSession: newSession }).then(() => {
       const token = jwt.sign({ id: user._id, lastSession: newSession }, secret, {
         expiresIn: 86400 // expires in 24 hours

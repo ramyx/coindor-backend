@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient, Timestamp } = require('mongodb');
 const ObjectId = require('mongodb').ObjectID;
 const settings = require("../config/settings");
 const { addCoinSchema } = require("./schemas/coinSchema");
@@ -28,21 +28,16 @@ const initializeDatabase = () =>
       });
     })
   );
-
-const initializeData = async () => {
-    await addUser({
-      username: settings.adminUsername,
-      password: settings.adminPassword
-    });
-    return;
-  };
-
+  
 const getId = (id) => new ObjectId(id);
 
 const getCollection = (name) => db.collection(name);
 
+const getTimestamp = (date) => new Timestamp(date, 1);
+
 module.exports = {
   initializeDatabase,
   getCollection,
-  getId
+  getId,
+  getTimestamp
 };
