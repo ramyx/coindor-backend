@@ -30,4 +30,7 @@ app.listen(settings.appPort, async (err) => {
   }
   console.log('Coindor Backend listening on port ' + settings.appPort + '!');
   await initializeServer();
+  app.emit('ready'); 
 })
+
+module.exports = app;

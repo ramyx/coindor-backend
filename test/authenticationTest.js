@@ -1,8 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const settings = require('../config/test.json');
-const { initializeDB, closeConnection } = require('./utils/database');
-const { login } = require('./utils/common');
+const { testData } = require('./utils/common');
 require('../app');
 
 const { assert } = chai;
@@ -11,19 +10,6 @@ chai.use(chaiHttp);
 describe('Authenticate', function() {
 
   const url = `http://${settings.host}:${settings.appPort}`;
-  let userId;
-
-  before(function(done) {
-    initializeDB(({adminId}) => {
-      userId = adminId;
-      done();
-    });
-  })
-
-  after(function(done) {
-    closeConnection();
-    done();
-  })
 
   describe('Log in', function() {
 
@@ -81,23 +67,11 @@ describe('Authenticate', function() {
 
   describe('Verify auth header in endpoints', function() {
 
-    let token;
-
-    before(function(done) {
-      initializeDB(({adminId}) => {
-        userId = adminId;
-        login("admin2", "Admin1234", (result) => {
-          token = result
-          done();
-        });
-      });
-    });
-
     it('Verifies auth header', function(done) {
       chai.request(url)
         .post('/api/admin/coin')
-        .set('x-access-token', token)
-        .send({prefix: "USD", name: "Dolar"})
+        .set('x-access-token', testData.adminToken)
+        .send({prefix: "BRL", name: "Reales"})
         .end((err, res) => {
           assert.equal(res.text, 'Successfully modified');
           done();
@@ -107,7 +81,7 @@ describe('Authenticate', function() {
     it('Verifies auth header but no token provided', function(done) {
       chai.request(url)
         .post('/api/admin/coin')
-        .send({prefix: "USD", name: "Dolar"})
+        .send({prefix: "BRL", name: "Reales"})
         .end((err, res) => {
           assert.equal(res.body.message, 'No token provided.');
           done();
@@ -118,7 +92,7 @@ describe('Authenticate', function() {
       chai.request(url)
         .post('/api/admin/coin')
         .set('x-access-token', "aa")
-        .send({prefix: "USD", name: "Dolar"})
+        .send({prefix: "BRL", name: "Reales"})
         .end((err, res) => {
           assert.equal(res.body.message, 'Failed to authenticate token: jwt malformed');
           done();
@@ -129,7 +103,7 @@ describe('Authenticate', function() {
       chai.request(url)
         .post('/api/admin/coin')
         .set('x-access-token', "aa")
-        .send({prefix: "USD", name: "Dolar"})
+        .send({prefix: "BRL", name: "Reales"})
         .end((err, res) => {
           assert.equal(res.body.message, 'Failed to authenticate token: jwt malformed');
           done();
@@ -137,18 +111,25 @@ describe('Authenticate', function() {
     });
 
     it('Verifies auth header but token has expired', function(done) {
+      let token;
       chai.request(url)
         .post('/login')
-        .send({username: "admin2", password: "Admin1234"})
+        .send({username: "admin3", password: "Admin1234"})
         .end((err, res) => {
+          token = JSON.parse(res.text).token;
           chai.request(url)
-            .post('/api/admin/coin')
-            .set('x-access-token', token)
-            .send({prefix: "USD", name: "Dolar"})
+            .post('/login')
+            .send({username: "admin3", password: "Admin1234"})
             .end((err, res) => {
-              assert.equal(res.text, "Token has expired");
-              done();
-            });
+              chai.request(url)
+                .post('/api/admin/coin')
+                .set('x-access-token', token)
+                .send({prefix: "BRL", name: "Reales"})
+                .end((err, res) => {
+                  assert.equal(res.text, "Token has expired");
+                  done();
+                });
+              });
         });
     });
   });
