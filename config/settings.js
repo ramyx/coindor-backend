@@ -1,12 +1,21 @@
 const initializeSettings = () => {
   switch(process.env.NODE_ENV) {
-    case "production":
-      return require("./production.json");
+    case "production": {
+      const newSettings = require("./production.json");
+      newSettings.authSecret = process.env.AUTH_SECRET;
+      newSettings.recaptchaSecretKey = process.env.RECAPTCHA_SECRET;
+      newSettings.adminUsername = process.env.ADMIN_USERNAME;
+      newSettings.adminPasswordHashed = process.env.ADMIN_PASSWORD;
+      return newSettings;
+    }
+    case "test":
+      return require("./test.json");
     default: {
-      return require("./development.json");
+      const newSettings = require("./development.json");
+      newSettings.recaptchaSecretKey = process.env.RECAPTCHA_SECRET;
+      return newSettings;
     }
   }
-  return;
 }
 
 const settings = initializeSettings();
