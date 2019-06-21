@@ -1,9 +1,7 @@
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const settings = require('../config/test.json');
-const { initializeDB, closeConnection, addCoin } = require('./utils/database');
-const { login } = require('./utils/common');
-require('../app');
+const { testData } = require('./utils/common');
 
 const { assert } = chai;
 chai.use(chaiHttp);
@@ -11,30 +9,11 @@ chai.use(chaiHttp);
 describe('Add rates to coin', function() {
 
   const url = `http://${settings.host}:${settings.appPort}`;
-  let token;
-  let coinId;
 
-  before(function(done) {
-    initializeDB(() => {
-      login("admin2", "admin", (result) => {
-        token = result;
-        addCoin({prefix: "USD", name: "Dollar"}, (newCoinId) => {
-          coinId = newCoinId;
-          done();
-        });
-      });
-    });
-  })
-
-  after(function(done) {
-    closeConnection();
-    done();
-  })
-
-  it('Admin adds coin', function(done) {
+  it('Admin adds rates to coins', function(done) {
     chai.request(url)
-      .patch('/api/admin/coin/' + coinId)
-      .set('x-access-token', token)
+      .patch('/api/admin/coin/' + testData.usdCoin._id)
+      .set('x-access-token', testData.adminToken)
       .send({sellRate: -5.1, buyRate: 9})
       .end((err, res) => {
         assert.equal(res.text, 'Successfully modified');

@@ -20,7 +20,7 @@ const register = (username, password, callback) => {
     .catch((err) => callback(err.message));
 }
 
-const verifyAuthHeader = (token, shouldBeAdmin, res, next) => {
+const verifyAuthHeader = (token, shouldBeAdmin, request, res, next) => {
   if (!token) {
     return res.status(401).send({ auth: false, message: 'No token provided.' });
   } else {
@@ -32,11 +32,12 @@ const verifyAuthHeader = (token, shouldBeAdmin, res, next) => {
           .then(user => {
             if (!user) {
               return res.status(404).send("No user found.");
-            } else if (decoded.lastSession !== user.lastSession) {
+            } else if (new Date(decoded.lastSession).getTime() !== new Date(user.lastSession).getTime()) {
               return res.status(500).send("Token has expired");
             } else if (shouldBeAdmin && user.role !== 'admin') {
               return res.status(500).send("Not allowed");
             } else {
+              request.user = user;
               next();
             }
           })
@@ -56,7 +57,7 @@ const login = (username, password, callback) => {
     }
     const passwordIsValid = bcrypt.compareSync(password, user.password);
     if (!passwordIsValid) return callback({}, { auth: false, token: null , exists: true, isLoggedIn: false });
-    const newSession = new Date().getTime();
+    const newSession = new Date();
     updateUser(user._id, { lastSession: newSession }).then(() => {
       const token = jwt.sign({ id: user._id, lastSession: newSession }, secret, {
         expiresIn: 86400 // expires in 24 hours

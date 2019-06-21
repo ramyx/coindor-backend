@@ -1,5 +1,5 @@
-const { initializeDatabase } = require("../models/database");
-const { initializeData } = require("../models/initializeData");
+const { initializeDatabase } = require("../../models/database");
+const { initializeData } = require("./initializeData");
 
 const initializeServer = async () => {
   await initializeDatabase();

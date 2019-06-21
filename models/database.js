@@ -1,4 +1,4 @@
-const MongoClient = require('mongodb').MongoClient;
+const { MongoClient } = require('mongodb');
 const ObjectId = require('mongodb').ObjectID;
 const settings = require("../config/settings");
 const { addCoinSchema } = require("./schemas/coinSchema");
@@ -17,22 +17,18 @@ const initializeDatabase = () =>
       db = client.db(dbName);
       db.dropDatabase((err) => {
         if (err) reject(err);
-        addUserSchema(db, (err) => { if (err) { reject(err) } });
-        addCoinSchema(db, (err) => { if (err) { reject(err) } } );
-        addLoginDeviceSchema(db, (err) => { if (err) { reject(err) } } );
-        resolve(db);
+        const schemaPromises = [
+          addUserSchema(db),
+          addCoinSchema(db),
+          addLoginDeviceSchema(db)
+        ];
+        Promise.all(schemaPromises).then(function(values) {
+          resolve(db);
+        }).catch(err => reject(err));
       });
     })
   );
-
-const initializeData = async () => {
-    await addUser({
-      username: settings.adminUsername,
-      password: settings.adminPassword
-    });
-    return;
-  };
-
+  
 const getId = (id) => new ObjectId(id);
 
 const getCollection = (name) => db.collection(name);

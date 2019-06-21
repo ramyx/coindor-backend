@@ -19,7 +19,13 @@ const updateCoin = async (coinId, fields) => {
   );
 };
 
+const getCoinById = async (coinId) => {
+  const _id = getId(coinId);
+  return await getCollection('coin').findOne({ _id });
+}
+
 module.exports = {
   addCoin,
-  updateCoin
+  updateCoin,
+  getCoinById
 };

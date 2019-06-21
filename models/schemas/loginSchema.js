@@ -1,5 +1,5 @@
-const addLoginDeviceSchema = (db, callback) => {
-  db.createCollection("loginDevice", {
+const addLoginDeviceSchema = async (db) => {
+  await db.createCollection("loginDevice", {
     validator: {
       $jsonSchema: {
           bsonType: "object",
@@ -17,10 +17,22 @@ const addLoginDeviceSchema = (db, callback) => {
               bsonType: "string",
               description: "must be a string"
             },
-            loginAttempts: "int",
-            lastAttempt: "timestamp",
-            lockUntil: "timestamp",
-            isLocked: "bool",
+            loginAttempts: {
+              bsonType: "int",
+              description: "must be a int"
+            },
+            lastAttempt: {
+              bsonType: "date",
+              description: "must be a date"
+            },
+            lockUntil: {
+              bsonType: "date",
+              description: "must be a date"
+            },
+            isLocked: {
+              bsonType: "bool",
+              description: "must be a bool"
+            },
             devicesUsed: {
               bsonType: "array",
               items: {
@@ -30,7 +42,8 @@ const addLoginDeviceSchema = (db, callback) => {
           }
       }
     }
-  }, callback);
+  });
+  return;
 };
 
 module.exports = {

@@ -1,5 +1,5 @@
-const addUserSchema = (db, callback) => {
-  db.createCollection("user", {
+const addUserSchema = async (db) => {
+  await db.createCollection("user", {
     validator: {
       $jsonSchema: {
           bsonType: "object",
@@ -24,20 +24,20 @@ const addUserSchema = (db, callback) => {
               enum: [ "pending", "approved" ]
             },
             lastSession: {
-              bsonType: "timestamp",
+              bsonType: "date",
+              description: "must be a date"
             },
             coins: {
               bsonType: "array",
               items: {
-                bsonType: "string",
-                pattern: "^[A-Z]{3,3}$"
+                bsonType: "string"
               }
             }
           }
       }
     }
-  }, callback);
-  db.collection("user").createIndex( { "username": 1 }, { unique: true } );
+  });
+  await db.collection("user").createIndex( { "username": 1 }, { unique: true } );
 };
 
 module.exports = {

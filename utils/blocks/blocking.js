@@ -62,7 +62,7 @@ const incrementUserAttempts = async (req, res, user, ipAddr, usernameIPkey, isDe
   }
 
   if (user.isLoggedIn) {
-    await refreshAttempts("usernameIPkey", usernameIPkey);
+    await refreshAttempts("usernameIPkey", usernameIPkey, 0);
     res.status(200).send({ auth: user.auth, token: user.token });
   }
 }
