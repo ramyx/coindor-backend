@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "NODE_ENV=test mocha",
+    "test": "NODE_ENV=test mocha --exit --recursive --timeout 5000",
     "test-contracts": "cd contracts && truffle test"
   },
   "dependencies": {
