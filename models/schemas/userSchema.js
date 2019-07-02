@@ -18,6 +18,10 @@ const addUserSchema = async (db) => {
               description: "must be a string",
               enum: [ "admin", "user" ]
             },
+            authy: {
+              bsonType: "objectId",
+              description: "must be a objectId"
+            },
             status: {
               bsonType: "string",
               description: "must be a string",

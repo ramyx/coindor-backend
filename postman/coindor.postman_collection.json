@@ -1,0 +1,206 @@
+{
+	"info": {
+		"_postman_id": "6120e957-3403-499c-8cf0-e3baf43a5adb",
+		"name": "coindor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"username\": \"admin8\",\n\"password\": \"Admin123\",\n\"confirmPassword\": \"Admin123\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"register"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "admin2",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"disabled": true
+						},
+						{
+							"key": "confirmPassword",
+							"value": "Admin123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"username\": \"admin\" ,\n   \"password\": \"Admin1234\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "admin",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin1234",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/user/authyregister",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWFhNTg4YjNmYTVmMjY0MWNiZDRlMSIsImxhc3RTZXNzaW9uIjoiMjAxOS0wNy0wMlQwMDozMDoxNC4wNTBaIiwiaWF0IjoxNTYyMDI3NDE0LCJleHAiOjE1NjIxMTM4MTR9.OlgIe72zGXnMsuTv9kCas4-4iDhdp1lmAUwN89t_cJ4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"email\": \"roel.hyatt10@ethereal.email\",\n\"phone\": \"388-410-0630\",\n\"countryCode\": \"54\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/authyregister",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"authyregister"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "admin2",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"disabled": true
+						},
+						{
+							"key": "confirmPassword",
+							"value": "Admin123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/user/verifytoken",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "x-access-token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVkMWFhNTg4YjNmYTVmMjY0MWNiZDRlMSIsImxhc3RTZXNzaW9uIjoiMjAxOS0wNy0wMlQwMDozMDoxNC4wNTBaIiwiaWF0IjoxNTYyMDI3NDE0LCJleHAiOjE1NjIxMTM4MTR9.OlgIe72zGXnMsuTv9kCas4-4iDhdp1lmAUwN89t_cJ4",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\"token\": \"7994812\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/user/verifytoken",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"verifytoken"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "admin2",
+							"disabled": true
+						},
+						{
+							"key": "password",
+							"value": "Admin123",
+							"disabled": true
+						},
+						{
+							"key": "confirmPassword",
+							"value": "Admin123",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
