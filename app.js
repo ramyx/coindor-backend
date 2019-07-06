@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const { initializeServer } = require("./utils/initialize/initialization");
 const { verifyAuthHeader } = require("./utils/auth");
 const settings = require("./config/settings");
@@ -9,6 +10,7 @@ const { setupAdminRoutes } = require("./routes/adminRoutes");
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use((request, reply, next) => {
