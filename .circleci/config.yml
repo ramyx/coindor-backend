@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "asdasda"
+      - checkout
+      - run: docker-compose build
+      - run: docker-compose up
+      # - run: docker login -u $DOCKER_USER -o $DOCKER_PASS
+      # - run: docker build -t nicrom/coindor:$CIRCLE_SHA1 .
+      # - run: docker push nicrom/coindor:$CIRCLE_SHA1
+      # - run: ssh -o StrictHostKeyChecking=no root@IPSERVER "/bin/bash /root/docker/deploy.sh $CIRCLE_SHA1"    
