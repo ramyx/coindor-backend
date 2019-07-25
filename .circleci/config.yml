@@ -10,4 +10,4 @@ jobs:
       - run: docker login -u $DOCKER_USER -p $DOCKER_PASS
       - run: docker build -t nicrom/coindor:$CIRCLE_SHA1 .
       - run: docker push nicrom/coindor:$CIRCLE_SHA1
-      - run: ssh -o StrictHostKeyChecking=no nicrom@coindor.ddnsking.com "/bin/bash /home/nicrom/docker/deploy.sh $CIRCLE_SHA1"    
+      - run: ssh -o StrictHostKeyChecking=no nicrom@35.192.146.6 "/bin/bash /home/nicrom/docker/deploy.sh $CIRCLE_SHA1"    
