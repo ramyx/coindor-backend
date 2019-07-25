@@ -8,7 +8,7 @@ jobs:
             - "57:0d:3a:ff:da:c8:9e:71:dc:d1:35:91:7c:f7:50:42"
       - checkout
       - run: docker-compose build
-      - run: docker-compose up
+      - run: docker-compose up -d
       # - run: docker login -u $DOCKER_USER -o $DOCKER_PASS
       # - run: docker build -t nicrom/coindor:$CIRCLE_SHA1 .
       # - run: docker push nicrom/coindor:$CIRCLE_SHA1
