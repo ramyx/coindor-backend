@@ -6,14 +6,14 @@ services:
     expose: 
       - "27017"
     volumes:
-      - /docker/mongo/data:/data/db
+      - /docker/veinte/data:/data/db
      
   app:
     container_name: nodeVeinte
     build: .
     restart: always
-    environment: 
-      NODE_ENV: production
+    # environment: 
+    #   NODE_ENV: development
     depends_on: 
       - mongo
     ports: 

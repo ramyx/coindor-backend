@@ -1,5 +1,5 @@
 {
-  "host": "localhost",
+  "host": "mongo",
   "dbPort": 27017,
   "appPort": 3000,
   "dbName": "coindorDB",
